@@ -1,12 +1,13 @@
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
-from archive.models import Archive
-from archive.api.v1.serializer import ArchiveSerializer
-from rest_framework import status
+from archive.models import Archive,Category,AssetType,Project
+from archive.api.v1.serializer import ArchiveSerializer,CategorySerializer,AssetTypeSerializer,ProjectSerializer
+from rest_framework import status,viewsets
 from django.core.exceptions import ObjectDoesNotExist
 
-class ArchiveView(generics.ListAPIView):
+
+class ArchiveView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = ArchiveSerializer
     queryset = Archive.objects.all()
@@ -26,7 +27,7 @@ class ArchiveView(generics.ListAPIView):
         serializer.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
     
-class ArchiveDetailView(generics.RetrieveUpdateDestroyAPIView):
+class ArchiveDetailView(viewsets.ModelViewSet):
 
     permission_classes = [IsAuthenticated]
     serializer_class = ArchiveSerializer
@@ -62,7 +63,22 @@ class ArchiveDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Response(serializer.data,status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response({'detail':'objects doesnt exist'},status=status.HTTP_404_NOT_FOUND)
-    
+        
+class CategoryApiView(viewsets.ModelViewSet):
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Category.objects.all()
+
+
+class AssetTypeApiView(viewsets.ModelViewSet):
+    serializer_class = AssetTypeSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = AssetType.objects.all()
+
+class ProjectApiView(viewsets.ModelViewSet):
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Project.objects.all()
     
 
    

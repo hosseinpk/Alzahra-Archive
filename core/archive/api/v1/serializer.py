@@ -13,23 +13,39 @@ class ArchiveSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         request = self.context.get('request')
-        print(request.parser_context)
+        #print(request.parser_context)
         rep = super().to_representation(instance)
+        
         if request.parser_context.get('kwargs').get('pk'):
             rep.pop('absolute_url')
-            return rep
+        rep["category"] = []
+        for cat in instance.category.all():
+            category = CategorySerializer(cat).data
+            rep["category"].append(category)
+
+        rep["asset_type"] = AssetTypeSerializer(instance.asset_type, context={"request": request}).data
+
+        rep["project"] = []
+        for prj in instance.project.all():
+            project = ProjectSerializer(prj).data
+            rep['project'].append(project)
         
         return rep
+        
+
     
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
+        fields = '__all__'
 
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
+        fields = '__all__'
 
 class AssetTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = AssetType
+        fields = '__all__'
