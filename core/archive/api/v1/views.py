@@ -17,7 +17,7 @@ class ArchiveView(generics.ListAPIView):
     
     def get(self,request):
         queryset = self.get_queryset()
-        serializer = self.serializer_class(instance = queryset ,many = True)
+        serializer = self.serializer_class(instance = queryset ,many = True,context = {'request': request})
         return Response(serializer.data,status=status.HTTP_200_OK)
     
     def post(self,request):
@@ -58,7 +58,7 @@ class ArchiveDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, *args, **kwargs):
         try:
             queryset = self.get_queryset()
-            serializer = self.serializer_class(queryset)
+            serializer = self.serializer_class(queryset,context = {'request': request})
             return Response(serializer.data,status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response({'detail':'objects doesnt exist'},status=status.HTTP_404_NOT_FOUND)
