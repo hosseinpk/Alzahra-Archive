@@ -6,7 +6,7 @@ app_name= 'api_v1'
 
 router = DefaultRouter()
 router.register('archive',views.ArchiveView,basename='view')
-router.register('archive',views.ArchiveDetailView,basename='detail-view')
+#router.register('archive-detail',views.ArchiveDetailView,basename='detail-view')
 router.register('category',views.CategoryApiView,basename='category')
 router.register('asset',views.AssetTypeApiView,basename='asset')
 router.register('project',views.ProjectApiView,basename='project')

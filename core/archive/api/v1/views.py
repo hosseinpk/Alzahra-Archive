@@ -16,36 +16,28 @@ class ArchiveView(viewsets.ModelViewSet):
         queryset = self.queryset.filter(status=True)
         return queryset
     
-    def get(self,request):
+    def get_object(self):
+        obj = self.get_queryset().get(id = self.kwargs['pk'])
+        return obj
+    
+    def list(self,request):
         queryset = self.get_queryset()
         serializer = self.serializer_class(instance = queryset ,many = True,context = {'request': request})
         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    def post(self,request):
+    def create(self,request):
         serializer = self.serializer_class(data = request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
-    
-class ArchiveDetailView(viewsets.ModelViewSet):
-
-    permission_classes = [IsAuthenticated]
-    serializer_class = ArchiveSerializer
-    queryset = Archive.objects.filter(status=True)
-
-    def get_queryset(self):
-        queryset = self.queryset.get(id=self.kwargs['pk'])
-        return queryset
-    
-    
-    def delete(self, request, *args, **kwargs):
-        obj = self.get_queryset()
+    def destroy(self, request, *args, **kwargs):
+        obj = self.get_object()
         obj.delete()
         return Response({"details" : "archive method deleted succefully"},status=status.HTTP_204_NO_CONTENT)
     
     
     def update(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        queryset = self.get_object()
         partial = False
         serializer = self.serializer_class(data = request.data, instance = queryset , partial = partial  )
         serializer.is_valid(raise_exception=True)
@@ -56,13 +48,26 @@ class ArchiveDetailView(viewsets.ModelViewSet):
         kwargs['partial'] = True
         return self.update(request,*args,**kwargs)
     
-    def get(self, request, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
         try:
-            queryset = self.get_queryset()
+            queryset = self.get_object()
             serializer = self.serializer_class(queryset,context = {'request': request})
             return Response(serializer.data,status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response({'detail':'objects doesnt exist'},status=status.HTTP_404_NOT_FOUND)
+    
+# class ArchiveDetailView(viewsets.ModelViewSet):
+
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = ArchiveSerializer
+#     queryset = Archive.objects.filter(status=True)
+
+#     def get_queryset(self):
+#         queryset = self.queryset.get(id=self.kwargs['pk'])
+#         return queryset
+    
+    
+
         
 class CategoryApiView(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
