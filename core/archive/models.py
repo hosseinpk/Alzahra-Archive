@@ -15,9 +15,10 @@ class Archive(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=True)
-    # texture
-    # rigged
-    # file_type
+    # texture = models.BooleanField(default=False)
+    # rigged = models.BooleanField(default=False)
+    # file_type = models.ForeignKey('FileType',on_delete=models.CASCADE)
+
     def __str__(self):
         return self.name
 
