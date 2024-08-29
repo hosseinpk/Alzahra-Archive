@@ -9,7 +9,7 @@ router.register('archive',views.ArchiveView,basename='view')
 #router.register('archive-detail',views.ArchiveDetailView,basename='detail-view')
 router.register('category',views.CategoryApiView,basename='category')
 router.register('asset',views.AssetTypeApiView,basename='asset')
-router.register('project',views.ProjectApiView,basename='project')
+router.register('proejct',views.ProjectApiView,basename='project')
 
 
 urlpatterns = []
