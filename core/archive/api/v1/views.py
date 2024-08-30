@@ -1,12 +1,13 @@
 from rest_framework.response import Response
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
-from archive.models import Archive, Category, AssetType, Project
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
+from archive.models import Archive, Category, AssetType, Project , FileType
 from archive.api.v1.serializer import (
     ArchiveSerializer,
     CategorySerializer,
     AssetTypeSerializer,
     ProjectSerializer,
+    FileTypeSerializer
 )
 from rest_framework import status, viewsets
 from django.core.exceptions import ObjectDoesNotExist
@@ -16,6 +17,11 @@ class ArchiveView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = ArchiveSerializer
     queryset = Archive.objects.all()
+
+    # def get_permissions(self):
+    #     if self.request.method in ['PUT','DELETE']:
+    #         return [IsAdminUser()]
+    #     return [IsAuthenticated()]
 
     def get_queryset(self):
         queryset = self.queryset.filter(status=True)
@@ -41,6 +47,7 @@ class ArchiveView(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
+        
         obj = self.get_object()
         obj.delete()
         return Response(
@@ -49,6 +56,7 @@ class ArchiveView(viewsets.ModelViewSet):
         )
 
     def update(self, request, *args, **kwargs):
+        
         queryset = self.get_object()
         partial = kwargs.pop("partial", False)
         serializer = self.serializer_class(
@@ -91,3 +99,10 @@ class ProjectApiView(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
     queryset = Project.objects.all()
+
+class FileTypeApiView(viewsets.ModelViewSet):
+    serializer_class = FileTypeSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = FileType.objects.all()
+
+
