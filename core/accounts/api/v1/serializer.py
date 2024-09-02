@@ -4,6 +4,9 @@ from django.core import exceptions
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from accounts.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -16,12 +19,13 @@ class RegistrationSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
 
         if attrs.get("password") != attrs.get("password1"):
-            raise serializers.ValidationError({"detail": "password doesnt match!"})
+            raise serializers.ValidationError({"detail": "password doesn't match!"})
         try:
             validate_password(attrs.get("password"))
         except exceptions.ValidationError as e:
             raise serializers.ValidationError({"password": list(e.messages)})
         return super().validate(attrs)
+        
 
     def create(self, validated_data):
         validated_data.pop("password1")
@@ -53,22 +57,13 @@ class LoginSerializer(serializers.Serializer):
 
         attrs["refresh"] = str(refresh)
         attrs["access"] = str(access)
-        # print(attrs)
+        attrs.pop('password')
+        print(attrs)
         return super().validate(attrs)
 
-    def create(self, validated_data):
-        validated_data.pop("username")
-        print(validated_data)
-        return super().create(validated_data)
-
-    from rest_framework import serializers
 
 
-from rest_framework.exceptions import ValidationError
-from django.contrib.auth import get_user_model
-from rest_framework_simplejwt.tokens import RefreshToken
 
-User = get_user_model()
 
 
 class LogoutSerializer(serializers.Serializer):
