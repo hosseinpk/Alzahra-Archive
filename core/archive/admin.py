@@ -1,6 +1,7 @@
 from django.contrib import admin
 from archive.models import AssetType, Project, Archive, Category, FileType
 
+
 class ArchiveAdmin(admin.ModelAdmin):
     date_hierarchy = "created_date"
     empty_value_display = "-"

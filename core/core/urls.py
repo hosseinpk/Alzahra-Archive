@@ -41,9 +41,9 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("archive/", include("archive.urls")),
-    path("accounts/",include('accounts.urls')),
+    path("accounts/", include("accounts.urls")),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-        path(
+    path(
         "swagger/output.json",
         schema_view.without_ui(cache_timeout=None),
         name="schema-json",

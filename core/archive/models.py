@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from accounts.models import User
 
 # Create your models here.
 
@@ -8,36 +8,31 @@ from django.contrib.auth.models import User
 #     return 'files/{}'.format(ext)
 
 
-
-
 class Archive(models.Model):
 
     name = models.CharField(max_length=255)
-    added_by = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    added_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     description = models.TextField()
     project = models.ForeignKey("Project", on_delete=models.CASCADE)
     asset_type = models.ForeignKey("AssetType", on_delete=models.CASCADE)
     category = models.ForeignKey("Category", on_delete=models.CASCADE)
-    file = models.FileField(upload_to='files', blank=True, null=True)
+    file = models.FileField(upload_to="files", blank=True, null=True)
     image = models.ImageField(upload_to="images", blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=True)
     textured = models.BooleanField(default=False)
     rigged = models.BooleanField(default=False)
-    file_type = models.ForeignKey('FileType',on_delete=models.CASCADE)
+    file_type = models.ForeignKey("FileType", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
-
     class Meta:
         ordering = ["name"]
 
-    
     def get_snippet(self):
-        return self.description[:15]+'...'
-    
+        return self.description[:15] + "..."
 
 
 class Project(models.Model):
@@ -59,10 +54,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class FileType(models.Model):
     name = models.CharField(max_length=20)
 
     def __str__(self):
         return self.name
-

@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from archive.models import Archive, Category, Project, AssetType , FileType
-from archive.models import User
+from archive.models import Archive, Category, Project, AssetType, FileType
+from accounts.models import User
 
 
 class ArchiveSerializer(serializers.ModelSerializer):
     absolute_url = serializers.SerializerMethodField()
-    snippet = serializers.ReadOnlyField(source='get_snippet')
+    snippet = serializers.ReadOnlyField(source="get_snippet")
 
     class Meta:
         model = Archive
@@ -25,9 +25,10 @@ class ArchiveSerializer(serializers.ModelSerializer):
             "category",
             "rigged",
             "textured",
-            "file_type"
+            "file_type",
         ]
-        read_only_fields = ['added_by']
+        read_only_fields = ["added_by"]
+
     def get_absolute_url(self, obj):
         request = self.context.get("request")
         return request.build_absolute_uri(obj.pk)
@@ -53,19 +54,19 @@ class ArchiveSerializer(serializers.ModelSerializer):
             instance.project, context={"request": request}
         ).data
 
-        rep["added_by"]= UserSerializer(
+        rep["added_by"] = UserSerializer(
             instance.added_by, context={"request": request}
         ).data
 
         rep["file_type"] = FileTypeSerializer(
-            instance.file_type, context = {"request":request}
+            instance.file_type, context={"request": request}
         ).data
 
         return rep
-    
+
     def create(self, validated_data):
         request = self.context.get("request")
-        validated_data["added_by"] = User.objects.get(id = request.user.id )
+        validated_data["added_by"] = User.objects.get(id=request.user.id)
         return super().create(validated_data)
 
 
@@ -86,12 +87,14 @@ class AssetTypeSerializer(serializers.ModelSerializer):
         model = AssetType
         fields = "__all__"
 
+
 class FileTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileType
         fields = "__all__"
 
+
 class UserSerializer(serializers.ModelSerializer):
-    class Meta : 
+    class Meta:
         model = User
-        fields = ["username"]
+        fields = ["email"]
