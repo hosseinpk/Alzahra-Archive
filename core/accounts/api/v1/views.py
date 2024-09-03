@@ -15,7 +15,7 @@ class RegistrationApiView(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LoginAvpiview(generics.GenericAPIView):
+class LoginApiView(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
@@ -37,8 +37,9 @@ class LogoutView(generics.GenericAPIView):
         serializer = LogoutSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
+            data = {"detail": "Successfully logged out."}
             return Response(
-                {"detail": "Successfully logged out."},
+                data=data,
                 status=status.HTTP_204_NO_CONTENT,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -58,7 +58,7 @@ class LoginSerializer(serializers.Serializer):
         attrs["refresh"] = str(refresh)
         attrs["access"] = str(access)
         attrs.pop('password')
-        print(attrs)
+        
         return super().validate(attrs)
 
 

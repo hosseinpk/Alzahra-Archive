@@ -13,7 +13,7 @@ urlpatterns = [
     # registration
     path("registration/", views.RegistrationApiView.as_view(), name="registration"),
     # login
-    path("login/", views.LoginAvpiview.as_view(), name="login"),
+    path("login/", views.LoginApiView.as_view(), name="login"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
     # login jwt
     # path('jwt/create',TokenObtainPairView.as_view(),name='jwt-create'),
