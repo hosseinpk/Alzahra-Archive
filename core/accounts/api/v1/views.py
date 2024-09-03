@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import generics, status
 from .serializer import RegistrationSerializer, LoginSerializer, LogoutSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 class RegistrationApiView(generics.GenericAPIView):
@@ -32,6 +33,7 @@ class LoginApiView(generics.GenericAPIView):
 
 class LogoutView(generics.GenericAPIView):
     serializer_class = LogoutSerializer
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = LogoutSerializer(data=request.data, context={"request": request})
