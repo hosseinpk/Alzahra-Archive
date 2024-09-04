@@ -3,7 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from accounts.models import User
+
 from django.contrib.auth import get_user_model
 
 User = get_user_model()

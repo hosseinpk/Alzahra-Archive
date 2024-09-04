@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from archive.models import Archive, Category, Project, AssetType, FileType
-from accounts.models import User
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 
 class ArchiveSerializer(serializers.ModelSerializer):
