@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser,AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from archive.models import Archive, Category, AssetType, Project, FileType
 from archive.api.v1.serializer import (
     ArchiveSerializer,
@@ -13,22 +13,20 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class ArchiveView(viewsets.ModelViewSet):
-    #permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     serializer_class = ArchiveSerializer
     queryset = Archive.objects.all()
 
     def get_permissions(self):
-        if self.action in ['list','retrieve','create']:
+        if self.action in ["list", "retrieve", "create"]:
             permission_classes = [IsAuthenticated]
-            
-        elif self.action in ['update', 'partial_update','destroy']:
-            permission_classes = [IsAdminUser]
-            
 
-        else :
+        elif self.action in ["update", "partial_update", "destroy"]:
+            permission_classes = [IsAdminUser]
+
+        else:
             permission_classes = [AllowAny]
-            
-        
+
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):
@@ -37,11 +35,11 @@ class ArchiveView(viewsets.ModelViewSet):
 
     def get_object(self):
         obj = self.get_queryset().get(id=self.kwargs["pk"])
-        
+
         return obj
 
     def list(self, request):
-        
+
         queryset = self.get_queryset()
         serializer = self.serializer_class(
             instance=queryset, many=True, context={"request": request}
@@ -49,7 +47,7 @@ class ArchiveView(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
-    
+
         serializer = self.serializer_class(
             data=request.data, context={"request": request}
         )
@@ -58,7 +56,7 @@ class ArchiveView(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
-        
+
         obj = self.get_object()
         obj.delete()
         return Response(
@@ -67,7 +65,7 @@ class ArchiveView(viewsets.ModelViewSet):
         )
 
     def update(self, request, *args, **kwargs):
-        
+
         queryset = self.get_object()
         partial = kwargs.pop("partial", False)
         serializer = self.serializer_class(
@@ -85,7 +83,7 @@ class ArchiveView(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         try:
-            
+
             queryset = self.get_object()
             serializer = self.serializer_class(queryset, context={"request": request})
             return Response(serializer.data, status=status.HTTP_200_OK)

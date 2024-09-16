@@ -90,3 +90,28 @@ class LogoutSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"detail": "Error occurred while logging out."}
             )
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)
+
+    class Meta:
+        fields = ['old_password','new_password','confirm_password']
+    
+    def validate(self, attrs):
+
+        if attrs.get('new_password') != attrs.get('confirm_password'):
+            raise serializers.ValidationError(
+                {"details":"password doesn't match"}
+            )
+        try: 
+            validate_password(attrs.get('new_password'))
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError(
+                {"password" : list(e.messages)}
+            )
+
+        return super().validate(attrs)
