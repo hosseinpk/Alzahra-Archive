@@ -3,6 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.utils.translation import gettext_lazy as _
 
 from django.contrib.auth import get_user_model
 
@@ -34,7 +35,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.CharField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(required=True, 
+                                     write_only=True,
+                                     style={'input_type':'password'},
+                                     label = _('password')
+                                     )
     access = serializers.CharField(read_only=True)
     refresh = serializers.CharField(read_only=True)
 
