@@ -8,14 +8,22 @@ from archive.api.v1.serializer import (
     ProjectSerializer,
     FileTypeSerializer,
 )
+
 from rest_framework import status, viewsets
+from rest_framework.pagination import PageNumberPagination
 from django.core.exceptions import ObjectDoesNotExist
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import CustomFilter
+from .pagination import DefaultPagination
 
 
 class ArchiveView(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
     serializer_class = ArchiveSerializer
     queryset = Archive.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CustomFilter
+    pagination_class = DefaultPagination
 
     def get_permissions(self):
         if self.action in ["list", "retrieve", "create"]:
@@ -30,7 +38,21 @@ class ArchiveView(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):
-        queryset = self.queryset.filter(status=True)
+
+        queryset = self.queryset.filter(status=True).order_by("-created_date")
+        category = self.request.query_params.get("category")
+        project = self.request.query_params.get("project")
+        if category:
+            queryset = queryset.filter(category__name=category)
+
+        if project:
+            queryset = queryset.filter(project__prj_name=project)
+
+        if project and category:
+            queryset = queryset.filter(
+                project__prj_name=project, category__name=category
+            )
+
         return queryset
 
     def get_object(self):
@@ -41,6 +63,13 @@ class ArchiveView(viewsets.ModelViewSet):
     def list(self, request):
 
         queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.serializer_class(
+                instance=page, many=True, context={"request": request}
+            )
+            return Response(serializer.data, status=status.HTTP_200_OK)
         serializer = self.serializer_class(
             instance=queryset, many=True, context={"request": request}
         )

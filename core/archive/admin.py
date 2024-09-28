@@ -5,7 +5,13 @@ from archive.models import AssetType, Project, Archive, Category, FileType
 class ArchiveAdmin(admin.ModelAdmin):
     date_hierarchy = "created_date"
     empty_value_display = "-"
-    search_fields = ["name", "category__name", "project__prj_name","asset_type__type","file_type__name"]
+    search_fields = [
+        "name",
+        "category__name",
+        "project__prj_name",
+        "asset_type__type",
+        "file_type__name",
+    ]
     list_display = [
         "name",
         "added_by",
