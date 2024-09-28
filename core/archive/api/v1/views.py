@@ -15,15 +15,16 @@ from django.core.exceptions import ObjectDoesNotExist
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import CustomFilter
 from .pagination import DefaultPagination
-
+from django.db.models import Q
 
 class ArchiveView(viewsets.ModelViewSet):
-    # permission_classes = [IsAuthenticated]
+    
     serializer_class = ArchiveSerializer
     queryset = Archive.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = CustomFilter
     pagination_class = DefaultPagination
+    
 
     def get_permissions(self):
         if self.action in ["list", "retrieve", "create"]:
@@ -38,20 +39,37 @@ class ArchiveView(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):
-
-        queryset = self.queryset.filter(status=True).order_by("-created_date")
+        
+        queryset = self.queryset.filter(status=True).order_by('-created_date')
         category = self.request.query_params.get("category")
         project = self.request.query_params.get("project")
         if category:
-            queryset = queryset.filter(category__name=category)
+            if category.isdigit():
+                
+                queryset = queryset.filter(Q(category__id=category) | Q(category__name=category))
+            else:
+                
+                queryset = queryset.filter(category__name=category)
 
+        
         if project:
-            queryset = queryset.filter(project__prj_name=project)
+            if project.isdigit():
+                
+                queryset = queryset.filter(Q(project__id=project) | Q(project__prj_name=project))
+            else:
+                
+                queryset = queryset.filter(project__prj_name=project)
 
+        
         if project and category:
-            queryset = queryset.filter(
-                project__prj_name=project, category__name=category
-            )
+            if project.isdigit() and category.isdigit():
+                queryset = queryset.filter(
+                    Q(project__id=project, category__id=category)
+                )
+            else:
+                queryset = queryset.filter(
+                    Q(project__prj_name=project, category__name=category)
+                )
 
         return queryset
 
@@ -70,9 +88,7 @@ class ArchiveView(viewsets.ModelViewSet):
                 instance=page, many=True, context={"request": request}
             )
             return Response(serializer.data, status=status.HTTP_200_OK)
-        serializer = self.serializer_class(
-            instance=queryset, many=True, context={"request": request}
-        )
+        serializer = self.serializer_class(instance=queryset,many=True,context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
