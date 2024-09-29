@@ -8,13 +8,14 @@ from .serializers import OutputSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from .pagination import DefaultPagination
 from .filters import CustomFilter
+from .permissions import CustomPermission
 
 
 class OutputApiView(ModelViewSet):
 
     serializer_class = OutputSerializer
     permission_classes = [
-        IsAdminUser,
+        CustomPermission,
     ]
     filter_backends = [DjangoFilterBackend]
     pagination_class = DefaultPagination
