@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from final_output.models import Output
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from .serializers import OutputSerializer
@@ -15,6 +15,7 @@ class OutputApiView(ModelViewSet):
 
     serializer_class = OutputSerializer
     permission_classes = [
+        IsAuthenticated,
         CustomPermission,
     ]
     filter_backends = [DjangoFilterBackend]
