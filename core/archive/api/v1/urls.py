@@ -16,6 +16,3 @@ router.register("filetype", views.FileTypeApiView, basename="filetype")
 urlpatterns = []
 
 urlpatterns += router.urls
-
-
-

@@ -8,10 +8,6 @@ router = DefaultRouter()
 router.register("output", views.OutputApiView, basename="view")
 
 
-
-
-urlpatterns = [
-    
-]
+urlpatterns = []
 
 urlpatterns += router.urls
