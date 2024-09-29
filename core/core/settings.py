@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "archive",
     "accounts",
+    "final_output"
 ]
 
 MIDDLEWARE = [
