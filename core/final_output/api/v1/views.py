@@ -24,17 +24,44 @@ class OutputApiView(ModelViewSet):
     filter_backends = [DjangoFilterBackend,SearchFilter]
     pagination_class = DefaultPagination
     filterset_class = CustomFilter
+    queryset = Output.objects.all()
     search_fields = ['released_year','name']
+    filter_fields = ['released_year']
+    
 
-    def get_queryset(self):
-        queryset = Output.objects.all().filter(status=True).order_by("-created_date")
-        search = self.request.query_params.get("search")
-        year = self.request.query_params.get("released_year")
-        if search:
-            queryset = queryset.filter(Q(released_year__icontains=search) | Q(name__icontains=search) )
+    # def get_queryset(self):
+    #     queryset = Output.objects.all().filter(status=True).order_by("-created_date")
+    #     search = self.request.query_params.get("search")
+    #     year = self.request.query_params.get("released_year")
+    #     if search:
+    #         queryset = queryset.filter(Q(released_year__icontains=search) | Q(name__icontains=search) )
         
-        if year :
-            queryset = queryset.filter(released_year__icontains = year) 
+    #     if year :
+    #         queryset = queryset.filter(released_year__icontains = year) 
+
+    #     return queryset
+    
+    def get_queryset(self):
+        
+        print(self.request.query_params)
+        queryset = Output.objects.all().filter(status=True).order_by("-created_date")
+
+        
+        query_params = self.request.query_params
+        
+        
+        filters = {f'{key}__icontains': query_params[key] for key in self.filter_fields if key in query_params}
+        
+        if filters:
+            queryset = queryset.filter(**filters)
+
+        
+        search_query = query_params.get('search', None)
+        if search_query and self.search_fields:
+            search_conditions = Q()
+            for field in self.search_fields:
+                search_conditions |= Q(**{f"{field}__icontains": search_query})
+            queryset = queryset.filter(search_conditions)
 
         return queryset
 
