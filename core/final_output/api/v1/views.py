@@ -103,3 +103,9 @@ class OutputApiView(ModelViewSet):
             return Response(
                 {"detail": "objects doesnt exist"}, status=status.HTTP_404_NOT_FOUND
             )
+    def destroy(self, request, *args, **kwargs):
+        return Response({"datails":"can not delete"},status=status.HTTP_403_FORBIDDEN)
+    def update(self, request, *args, **kwargs):
+        return Response({"datails":"can not update"},status=status.HTTP_403_FORBIDDEN)
+    def partial_update(self, request, *args, **kwargs):
+        return Response({"datails":"can not update"},status=status.HTTP_403_FORBIDDEN)
