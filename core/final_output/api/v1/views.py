@@ -24,12 +24,12 @@ class OutputApiView(ModelViewSet):
     filter_backends = [DjangoFilterBackend,SearchFilter]
     pagination_class = DefaultPagination
     filterset_class = CustomFilter
-    search_fields = ['year','name']
+    search_fields = ['released_year','name']
 
     def get_queryset(self):
         queryset = Output.objects.all().filter(status=True).order_by("-created_date")
         search = self.request.query_params.get("search")
-        year = self.request.query_params.get("year")
+        year = self.request.query_params.get("released_year")
         if search:
             queryset = queryset.filter(Q(released_year__icontains=search) | Q(name__icontains=search) )
         
