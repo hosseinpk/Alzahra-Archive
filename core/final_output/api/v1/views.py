@@ -9,24 +9,32 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .pagination import DefaultPagination
 from .filters import CustomFilter
 from .permissions import CustomPermission
+from rest_framework.filters import SearchFilter
+from django.db.models import Q
+
 
 
 class OutputApiView(ModelViewSet):
 
     serializer_class = OutputSerializer
     permission_classes = [
-        IsAuthenticated,
+        
         CustomPermission,
     ]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend,SearchFilter]
     pagination_class = DefaultPagination
     filterset_class = CustomFilter
+    search_fields = ['year','name']
 
     def get_queryset(self):
         queryset = Output.objects.all().filter(status=True).order_by("-created_date")
+        search = self.request.query_params.get("search")
         year = self.request.query_params.get("year")
-        if year:
-            queryset = queryset.filter(released_year=year)
+        if search:
+            queryset = queryset.filter(Q(released_year__icontains=search) | Q(name__icontains=search) )
+        
+        if year :
+            queryset = queryset.filter(released_year__icontains = year) 
 
         return queryset
 

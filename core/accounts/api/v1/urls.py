@@ -22,5 +22,5 @@ urlpatterns = [
     # path('jwt/create',TokenObtainPairView.as_view(),name='jwt-create'),
     # path('jwt/refresh'),
     # path('jwt/regtrsh',TokenRefreshView.as_view(),name='token-refresh'),
-    path("jwt/verify", TokenVerifyView.as_view(), name="token-verify"),
+    # path("jwt/verify", TokenVerifyView.as_view(), name="token-verify"),
 ]

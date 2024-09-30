@@ -16,15 +16,18 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filters import CustomFilter
 from .pagination import DefaultPagination
 from django.db.models import Q
+from rest_framework.filters import SearchFilter
 
 
 class ArchiveView(viewsets.ModelViewSet):
 
     serializer_class = ArchiveSerializer
     queryset = Archive.objects.all()
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend,SearchFilter]
     filterset_class = CustomFilter
     pagination_class = DefaultPagination
+    search_fields = ['description','name']
+
 
     def get_permissions(self):
         if self.action in ["list", "retrieve", "create"]:
@@ -43,6 +46,9 @@ class ArchiveView(viewsets.ModelViewSet):
         queryset = self.queryset.filter(status=True).order_by("-created_date")
         category = self.request.query_params.get("category")
         project = self.request.query_params.get("project")
+        search = self.request.query_params.get("search")
+        if search:
+            queryset = queryset.filter(Q(description__icontains=search) | Q(name__icontains=search) )
         if category:
             if category.isdigit():
 
