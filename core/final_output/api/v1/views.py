@@ -43,7 +43,7 @@ class OutputApiView(ModelViewSet):
     
     def get_queryset(self):
         
-        print(self.request.query_params)
+        
         queryset = Output.objects.all().filter(status=True).order_by("-created_date")
 
         
