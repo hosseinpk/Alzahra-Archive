@@ -6,29 +6,26 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear tokens from localStorage
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-
-    // Redirect to login page
     navigate('/login');
   };
 
-  const isLoggedIn = !!localStorage.getItem('accessToken'); // Check if the user is logged in
+  const isLoggedIn = !!localStorage.getItem('accessToken'); 
 
   return (
     <AppBar position="static">
-      <Container>
+      <Container maxWidth={false} sx={{ padding: 0 }}>
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Archive Management
+            Alzahra Archive
           </Typography>
           {/* Home Button */}
-          <Button color="inherit" onClick={() => navigate('/')}>
+          <Button color="inherit" onClick={() => navigate('/home')} sx={{ marginRight: 2 }}>
             Home
           </Button>
           {/* Add File Button */}
-          <Button color="inherit" onClick={() => navigate('/addfile')}>
+          <Button color="inherit" onClick={() => navigate('/addfile')} sx={{ marginRight: 2 }}>
             Add File
           </Button>
           {/* Login/Logout Button */}

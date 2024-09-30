@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, CardContent, Typography, CardMedia, Button, Container } from '@mui/material';
+import { Card, CardContent, Typography, CardMedia, Button, Container,Box } from '@mui/material';
 import axios from 'axios';
 
 const ArchiveDetails = () => {
@@ -20,6 +20,7 @@ const ArchiveDetails = () => {
 
         const response = await axios.get(`http://127.0.0.1:8000/archive/api/v1/archive/${id}/`, config);
         setItem(response.data);
+        
       } catch (error) {
         console.error('Error fetching archive details:', error);
         setError('Failed to load archive details.');
@@ -34,9 +35,10 @@ const ArchiveDetails = () => {
   }
 
   return (
-    <Container>
+    <Box sx={{padding:3}}>
+      <Container>
       {error && <Typography color="error">{error}</Typography>}
-
+      
       <Card>
         
         <CardMedia
@@ -64,6 +66,7 @@ const ArchiveDetails = () => {
         </Button>
       </Card>
     </Container>
+    </Box>
   );
 };
 
