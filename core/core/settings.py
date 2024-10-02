@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "archive",
     "accounts",
     "final_output",
+    "breakdown",
 ]
 
 MIDDLEWARE = [

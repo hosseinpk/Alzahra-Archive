@@ -44,7 +44,7 @@ class OutputApiView(ModelViewSet):
     def get_queryset(self):
         
         
-        queryset = Output.objects.all().filter(status=True).order_by("-created_date")
+        queryset = self.queryset.filter(status=True).order_by("-created_date")
 
         
         query_params = self.request.query_params
@@ -101,11 +101,11 @@ class OutputApiView(ModelViewSet):
 
         except ObjectDoesNotExist:
             return Response(
-                {"detail": "objects doesnt exist"}, status=status.HTTP_404_NOT_FOUND
+                {"detail": "objects doesn't exist"}, status=status.HTTP_404_NOT_FOUND
             )
     def destroy(self, request, *args, **kwargs):
-        return Response({"datails":"can not delete"},status=status.HTTP_403_FORBIDDEN)
+        return Response({"details":"can not delete"},status=status.HTTP_403_FORBIDDEN)
     def update(self, request, *args, **kwargs):
-        return Response({"datails":"can not update"},status=status.HTTP_403_FORBIDDEN)
+        return Response({"details":"can not update"},status=status.HTTP_403_FORBIDDEN)
     def partial_update(self, request, *args, **kwargs):
-        return Response({"datails":"can not update"},status=status.HTTP_403_FORBIDDEN)
+        return Response({"details":"can not update"},status=status.HTTP_403_FORBIDDEN)

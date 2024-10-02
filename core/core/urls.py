@@ -43,6 +43,7 @@ urlpatterns = [
     path("archive/", include("archive.urls")),
     path("accounts/", include("accounts.urls")),
     path("output/", include("final_output.urls")),
+    path("breakdown/",include("breakdown.urls")),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path(
         "swagger/output.json",
