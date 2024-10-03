@@ -35,7 +35,7 @@ const AddFile = () => {
         const [categoryRes, assetRes, projectRes, fileTypeRes] = await Promise.all([
           axios.get('http://127.0.0.1:8000/archive/api/v1/category/', config),
           axios.get('http://127.0.0.1:8000/archive/api/v1/asset/', config),
-          axios.get('http://127.0.0.1:8000/archive/api/v1/proejct/', config),
+          axios.get('http://127.0.0.1:8000/archive/api/v1/project/', config),
           axios.get('http://127.0.0.1:8000/archive/api/v1/filetype/', config),
         ]);
         
