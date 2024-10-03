@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, CardContent, Typography, Grid, Container, CardActionArea, CardMedia, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import archiveImage from '../../assets/archive.png'; 
-import breakdownImage from '../../assets/archive.png'; 
-import outputImage from '../../assets/archive.png'; 
+import archiveImage from '../../assets/archive.jpeg'; 
+import breakdownImage from '../../assets/breakdown.jpeg'; 
+import outputImage from '../../assets/output.jpeg'; 
 
 const HomePage = () => {
   const navigate = useNavigate();

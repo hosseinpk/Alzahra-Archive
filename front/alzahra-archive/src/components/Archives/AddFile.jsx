@@ -118,11 +118,13 @@ const AddFile = () => {
         onChange={handleImageChange}
         accept="image/*"
         style={{ marginBottom: '16px' }}
+        required
       />
       <input
         type="file"
         onChange={handleFileChange}
         style={{ marginBottom: '16px' }}
+        required
       />
 
       <TextField
