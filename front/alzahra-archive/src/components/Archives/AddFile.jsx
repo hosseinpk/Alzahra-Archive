@@ -38,8 +38,7 @@ const AddFile = () => {
           axios.get('http://127.0.0.1:8000/archive/api/v1/proejct/', config),
           axios.get('http://127.0.0.1:8000/archive/api/v1/filetype/', config),
         ]);
-        // console.log(projectRes.data)
-        // console.log(categoryRes.data)
+        
 
         setCategories(categoryRes.data);
         setAssets(assetRes.data);

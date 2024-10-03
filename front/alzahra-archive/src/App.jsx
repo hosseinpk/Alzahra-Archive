@@ -2,13 +2,21 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import HomePage from './components/HomePage';
-import ArchiveDetails from './components/ArchiveDetails';
+import ArchiveDetails from './components/Archives/ArchiveDetails';
 import Header from './components/Header';
-import AddFile from './components/AddFile';
+import BreakdownPage from './components/Breakdown/BreakDown'; 
+import OutputPage from './components/Output/Output'; 
+import Archive from './components/Archives/Archive';
+import BreakDownDetails from './components/Breakdown/BreakDownDetails';
+import OutputDetail from './components/Output/OutputDetail';
 
 const isAuthenticated = () => {
   const accessToken = localStorage.getItem('accessToken');
   return !!accessToken; 
+};
+
+const ProtectedRoute = ({ element }) => {
+  return isAuthenticated() ? element : <Navigate to="/login" />;
 };
 
 const App = () => {
@@ -22,13 +30,15 @@ const App = () => {
         />
         <Route
           path="/home"
-          element={<HomePage />}
+          element={<ProtectedRoute element={<HomePage />} />}
         />
         <Route path="/archive/:id" element={<ArchiveDetails />} />
-        <Route
-          path="/addfile"
-          element={<AddFile />}
-        />
+        <Route path='/breakdown/:id' element={<BreakDownDetails />}/>
+        <Route path='/output/:id' element={<OutputDetail />}/>
+        
+        <Route path="/archive" element={<ProtectedRoute element={<Archive />} />} />
+        <Route path="/breakdown" element={<ProtectedRoute element={<BreakdownPage />} />} />
+        <Route path="/output" element={<ProtectedRoute element={<OutputPage />} />} />
         <Route
           path="*"
           element={<Navigate to={isAuthenticated() ? "/home" : "/login"} />}

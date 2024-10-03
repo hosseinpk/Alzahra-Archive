@@ -12,7 +12,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // Sending request to the API
+ 
       const response = await axios.post('http://127.0.0.1:8000/accounts/api/v1/login/', {
         email,
         password,
@@ -31,7 +31,10 @@ const Login = () => {
   };
 
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="xs" sx={{
+      marginTop:4,
+      padding: 2 
+    }} >
       <Typography variant="h4" gutterBottom>
         Login
       </Typography>
