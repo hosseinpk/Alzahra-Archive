@@ -18,9 +18,11 @@ const Login = () => {
         password,
       });
       
-      const { access, refresh } = response.data;
+      const { access, refresh,is_staff,username } = response.data;
       localStorage.setItem('accessToken', access);
       localStorage.setItem('refreshToken', refresh);
+      localStorage.setItem('is_staff', is_staff);
+      localStorage.setItem('username',username)
 
       navigate('/home');
     } catch (error) {

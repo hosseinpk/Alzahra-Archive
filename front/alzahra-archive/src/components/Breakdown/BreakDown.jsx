@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Grid, Container, CardActionArea, CardMedia, Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import axios from 'axios';
-import FilterComponent from '../FilterComponent';
 
 const BreakDown = () => {
   const [data, setData] = useState([]);
@@ -17,8 +16,8 @@ const BreakDown = () => {
         const accessToken = localStorage.getItem('accessToken');
         const config = {
           headers: {
-            'Authorization': `Bearer ${accessToken}`
-          }
+            'Authorization': `Bearer ${accessToken}`,
+          },
         };
 
         const response = await axios.get('http://127.0.0.1:8000/breakdown/api/v1/breakdown/', config);
@@ -36,48 +35,21 @@ const BreakDown = () => {
     navigate(`/breakdown/${id}`);
   };
 
-  const handleOpen = () => {
-    setOpen(true); // Open the modal
-  };
-
-  const handleClose = () => {
-    setOpen(false); // Close the modal
-  };
-
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
   // Filter data based on search term
-  const filteredData = data.filter(item =>
+  const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  // Function to handle saving file
-  const handleSaveFile = async (fileData) => {
-    try {
-      const accessToken = localStorage.getItem('accessToken');
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      };
-
-      // Make your POST request to save the file here
-      await axios.post('http://127.0.0.1:8000/breakdown/api/v1/breakdown/', fileData, config);
-      setOpen(false); 
-    } catch (error) {
-      console.error('Error saving the file:', error);
-    }
-  };
 
   return (
     <>
       <Box sx={{ padding: 4 }}>
         <Container maxWidth={false} sx={{ padding: 0 }}>
           {error && <Typography color="error">{error}</Typography>}
-          
+
           {/* Menu Bar */}
           <Box
             display="flex"
@@ -85,24 +57,20 @@ const BreakDown = () => {
             justifyContent="space-between"
             sx={{
               marginBottom: 2,
-              backgroundColor: 'gray', // Gray background
+              backgroundColor: '#f5f5f5', // Gray background
               borderRadius: '8px', // Rounded edges
-              padding: 2 
+              padding: 2,
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <FilterComponent />
-              <TextField
-                variant="outlined"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={handleSearch}
-                size="small"
-              />
-            </Box>
-            
+            <TextField
+              variant="outlined"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearch}
+              size="small"
+            />
           </Box>
-          
+
           <Grid container spacing={4}>
             {filteredData.map((item) => (
               <Grid item xs={12} sm={6} md={3} key={item.id}>
@@ -129,8 +97,6 @@ const BreakDown = () => {
           </Grid>
         </Container>
       </Box>
-
-      
     </>
   );
 };

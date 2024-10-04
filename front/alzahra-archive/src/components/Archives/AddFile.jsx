@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Checkbox, FormControlLabel, MenuItem, Box } from '@mui/material';
+import { TextField, Button, Checkbox, FormControlLabel, MenuItem, Box, Snackbar, Alert, Typography } from '@mui/material';
 import axios from 'axios';
 
-const AddFile = () => {
+const AddFile = ({ onSave }) => {
   const [data, setData] = useState({
     name: '',
     description: '',
@@ -16,6 +16,9 @@ const AddFile = () => {
   });
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const [categories, setCategories] = useState([]);
   const [assets, setAssets] = useState([]);
@@ -29,8 +32,8 @@ const AddFile = () => {
         const accessToken = localStorage.getItem('accessToken');
         const config = {
           headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
+            Authorization: `Bearer ${accessToken}`,
+          },
         };
         const [categoryRes, assetRes, projectRes, fileTypeRes] = await Promise.all([
           axios.get('http://127.0.0.1:8000/archive/api/v1/category/', config),
@@ -38,7 +41,6 @@ const AddFile = () => {
           axios.get('http://127.0.0.1:8000/archive/api/v1/project/', config),
           axios.get('http://127.0.0.1:8000/archive/api/v1/filetype/', config),
         ]);
-        
 
         setCategories(categoryRes.data);
         setAssets(assetRes.data);
@@ -70,12 +72,12 @@ const AddFile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const accessToken = localStorage.getItem('accessToken');
-        const config = {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        };
+      const accessToken = localStorage.getItem('accessToken');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
       const formData = new FormData();
       formData.append('file', file);
       formData.append('image', image);
@@ -84,57 +86,70 @@ const AddFile = () => {
         formData.append(key, value);
       }
 
-      await axios.post('http://127.0.0.1:8000/archive/api/v1/archive/', formData,config);
-      console.log('file added')
+      await axios.post('http://127.0.0.1:8000/archive/api/v1/archive/', formData, config);
+      setSnackbarMessage('File added successfully!'); // Success message
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+      onSave(); // Notify Archive component
+      resetForm(); // Clear the form after submission
     } catch (error) {
-      console.error(error);
+      console.error('Error adding the file:', error);
+      setSnackbarMessage('Failed to add the file.'); // Error message
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
     }
   };
 
+  const resetForm = () => {
+    setData({
+      name: '',
+      description: '',
+      status: true,
+      project: '',
+      asset_type: '',
+      category: '',
+      rigged: false,
+      textured: false,
+      file_type: '',
+    });
+    setImage(null);
+    setFile(null);
+  };
+
+  // Handle Snackbar close
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
-    <Box sx={{ p: 10, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <TextField 
-        name="name" 
-        label="Name" 
-        value={data.name} 
-        onChange={handleChange} 
-        required 
-        fullWidth 
+    <Box component="form" onSubmit={handleSubmit}>
+      <TextField
+        fullWidth
+        label="File Name"
+        name="name"
+        value={data.name}
+        onChange={handleChange}
+        margin="normal"
+        required
       />
       <TextField
-        name="description"
+        fullWidth
         label="Description"
+        name="description"
         value={data.description}
         onChange={handleChange}
-        required
-        multiline
-        rows={4}
-        fullWidth
-      />
-     
-      <input
-        type="file"
-        onChange={handleImageChange}
-        accept="image/*"
-        style={{ marginBottom: '16px' }}
+        margin="normal"
         required
       />
-      <input
-        type="file"
-        onChange={handleFileChange}
-        style={{ marginBottom: '16px' }}
-        required
-      />
-
       <TextField
-        name="project"
+        fullWidth
+        select
         label="Project"
+        name="project"
         value={data.project}
         onChange={handleChange}
-        select
+        margin="normal"
         required
-        fullWidth
       >
         {projects.map((project) => (
           <MenuItem key={project.id} value={project.id}>
@@ -142,15 +157,15 @@ const AddFile = () => {
           </MenuItem>
         ))}
       </TextField>
-
       <TextField
-        name="asset_type"
+        fullWidth
+        select
         label="Asset Type"
+        name="asset_type"
         value={data.asset_type}
         onChange={handleChange}
-        select
+        margin="normal"
         required
-        fullWidth
       >
         {assets.map((asset) => (
           <MenuItem key={asset.id} value={asset.id}>
@@ -158,15 +173,15 @@ const AddFile = () => {
           </MenuItem>
         ))}
       </TextField>
-
       <TextField
-        name="category"
+        fullWidth
+        select
         label="Category"
+        name="category"
         value={data.category}
         onChange={handleChange}
-        select
+        margin="normal"
         required
-        fullWidth
       >
         {categories.map((category) => (
           <MenuItem key={category.id} value={category.id}>
@@ -174,24 +189,15 @@ const AddFile = () => {
           </MenuItem>
         ))}
       </TextField>
-
-      <FormControlLabel
-        control={<Checkbox name="rigged" checked={data.rigged} onChange={handleChange} />}
-        label="Rigged"
-      />
-      <FormControlLabel
-        control={<Checkbox name="textured" checked={data.textured} onChange={handleChange} />}
-        label="Textured"
-      />
-
       <TextField
-        name="file_type"
+        fullWidth
+        select
         label="File Type"
+        name="file_type"
         value={data.file_type}
         onChange={handleChange}
-        select
+        margin="normal"
         required
-        fullWidth
       >
         {fileTypes.map((fileType) => (
           <MenuItem key={fileType.id} value={fileType.id}>
@@ -199,11 +205,49 @@ const AddFile = () => {
           </MenuItem>
         ))}
       </TextField>
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="rigged"
+            checked={data.rigged}
+            onChange={handleChange}
+          />
+        }
+        label="Rigged"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="textured"
+            checked={data.textured}
+            onChange={handleChange}
+          />
+        }
+        label="Textured"
+      />
+      <br />
 
-      <Button type="submit" variant="contained" color="primary">
-        save
+      {/* Labels for file inputs */}
+      <Typography variant="h8" sx={{ mt: 2 }}>
+        Add Image: 
+      </Typography>
+      <input type="file" onChange={handleImageChange} accept="image/*" />
+      
+      <Typography variant="h8" sx={{ mt: 2 }}>
+        Add File:   
+      </Typography>
+      <input type="file" onChange={handleFileChange} required />
+
+      <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+        Add File
       </Button>
-    </form>
+
+      {/* Snackbar for notifications */}
+      <Snackbar open={snackbarOpen} autoHideDuration={5000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%', minHeight: '80px', fontWeight: 'bold', fontSize: '1.8rem' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

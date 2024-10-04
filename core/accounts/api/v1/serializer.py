@@ -62,6 +62,8 @@ class LoginSerializer(serializers.Serializer):
 
         attrs["refresh"] = str(refresh)
         attrs["access"] = str(access)
+        attrs["username"] = user.email
+        attrs["is_staff"] = user.is_staff
         attrs.pop("password")
 
         return super().validate(attrs)
@@ -76,7 +78,7 @@ class LogoutSerializer(serializers.Serializer):
     def validate(self, attrs):
         refresh_token = attrs.get("refresh")
         try:
-            # Decode the refresh token to ensure it's valid
+            
             RefreshToken(refresh_token)
         except Exception as e:
             raise serializers.ValidationError({"detail": "Invalid token."})
@@ -86,7 +88,7 @@ class LogoutSerializer(serializers.Serializer):
         refresh_token = self.validated_data.get("refresh")
         try:
             token = RefreshToken(refresh_token)
-            token.blacklist()  # Blacklist the token to effectively log out the user
+            token.blacklist()  
         except Exception as e:
             raise serializers.ValidationError(
                 {"detail": "Error occurred while logging out."}

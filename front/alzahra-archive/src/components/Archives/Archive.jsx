@@ -14,43 +14,59 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  TextField,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import axios from 'axios';
-import FilterComponent from '../FilterComponent';
+import FilterComponent from './FilterArComponent';
 import AddFile from './AddFile';
 
 const Archive = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
-  const [filters, setFilters] = useState({ category: '', project: '', assetType: '' });
+  const [filters, setFilters] = useState({ category: '', project: '' });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const navigate = useNavigate();
 
+  // Fetch data from API based on filters or search query
+  const fetchData = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: {
+          category: filters.category || undefined,
+          project: filters.project || undefined,
+          search: searchQuery || undefined,
+        },
+      };
+
+      const response = await axios.get('http://127.0.0.1:8000/archive/api/v1/archive/', config);
+      setData(response.data);
+    } catch (error) {
+      console.error('Error fetching the archive data:', error);
+      setError('Failed to fetch data.');
+    }
+  };
+
+  // Fetch data on component load and whenever filters or search query change
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const accessToken = localStorage.getItem('accessToken');
-        const config = {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        };
-
-        const response = await axios.get('http://127.0.0.1:8000/archive/api/v1/archive/', config);
-        setData(response.data);
-      } catch (error) {
-        console.error('Error fetching the archive data:', error);
-        setError('Failed to fetch data.');
-      }
-    };
-
     fetchData();
-  }, []);
+  }, [filters, searchQuery]);
 
+  // Handle navigation on card click
   const handleCardClick = (id) => {
     navigate(`/archive/${id}`);
   };
 
+  // Open/Close AddFile modal
   const handleOpen = () => {
     setOpen(true);
   };
@@ -59,17 +75,32 @@ const Archive = () => {
     setOpen(false);
   };
 
+  // Handle filter changes
   const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      ...newFilters,
+    }));
   };
 
-  // Filter data based on selected filters
-  const filteredData = data.filter((item) => {
-    const matchesCategory = filters.category ? item.categoryId === filters.category : true;
-    const matchesProject = filters.project ? item.projectId === filters.project : true;
-    const matchesAssetType = filters.assetType ? item.assetTypeId === filters.assetType : true;
-    return matchesCategory && matchesProject && matchesAssetType;
-  });
+  // Handle search query change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Callback for when a new file is added
+  const handleFileAdded = () => {
+    setOpen(false);
+    fetchData(); // Re-fetch data to update cards after adding a new file
+    setSnackbarMessage('File added successfully!'); // Show success notification
+    setSnackbarSeverity('success');
+    setSnackbarOpen(true);
+  };
+
+  // Handle Snackbar close
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <>
@@ -84,21 +115,47 @@ const Archive = () => {
             justifyContent="space-between"
             sx={{
               marginBottom: 2,
-              backgroundColor: 'gray',
+              backgroundColor: '#f5f5f5',
               borderRadius: '8px',
               padding: 2,
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              {/* Filter Component */}
               <FilterComponent onFilterChange={handleFilterChange} />
-              <Button variant="contained" color="primary" onClick={handleOpen}>
-                Add File
-              </Button>
+
+              <TextField
+                variant="outlined"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                sx={{
+                  padding: 1,
+                  borderRadius: '4px',
+                  paddingBottom: '25px',
+                  minWidth: 200,
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'black',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'blue',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'blue',
+                    },
+                  },
+                }}
+              />
             </Box>
+            <Button variant="contained" color="primary" onClick={handleOpen}>
+              Add File
+            </Button>
           </Box>
 
+          {/* Cards */}
           <Grid container spacing={4}>
-            {filteredData.map((item) => (
+            {data.map((item) => (
               <Grid item xs={12} sm={6} md={3} key={item.id}>
                 <Card>
                   <CardActionArea onClick={() => handleCardClick(item.id)}>
@@ -119,11 +176,19 @@ const Archive = () => {
         </Container>
       </Box>
 
+      {/* Snackbar for notifications */}
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
       {/* Modal for AddFile */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
         <DialogTitle>Add File</DialogTitle>
         <DialogContent>
-          <AddFile onSave={() => { /* Add save logic here */ }} />
+          {/* Pass handleFileAdded to AddFile component */}
+          <AddFile onSave={handleFileAdded} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

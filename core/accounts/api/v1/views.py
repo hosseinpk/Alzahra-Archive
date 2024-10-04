@@ -34,6 +34,8 @@ class LoginApiView(generics.GenericAPIView):
             data = {
                 "access": serializer.validated_data["access"],
                 "refresh": serializer.validated_data["refresh"],
+                "username" : serializer.validated_data["username"],
+                "is_staff" : serializer.validated_data["is_staff"]
             }
 
             return Response(data=data, status=status.HTTP_200_OK)

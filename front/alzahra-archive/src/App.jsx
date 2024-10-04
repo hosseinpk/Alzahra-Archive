@@ -9,6 +9,8 @@ import OutputPage from './components/Output/Output';
 import Archive from './components/Archives/Archive';
 import BreakDownDetails from './components/Breakdown/BreakDownDetails';
 import OutputDetail from './components/Output/OutputDetail';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const isAuthenticated = () => {
   const accessToken = localStorage.getItem('accessToken');
