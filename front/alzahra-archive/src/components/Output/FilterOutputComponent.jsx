@@ -6,7 +6,6 @@ const FilterOutputComponent = ({ onFilterChange }) => {
   const [releasedYears, setReleasedYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
 
-  // Fetch data for available released years from the output API
   useEffect(() => {
     const fetchYears = async () => {
       try {
@@ -16,18 +15,22 @@ const FilterOutputComponent = ({ onFilterChange }) => {
             Authorization: `Bearer ${accessToken}`,
           },
         };
-
+  
         const response = await axios.get('http://127.0.0.1:8000/output/api/v1/output/', config);
-        // Extract unique released years from the fetched data
-        const years = [...new Set(response.data.map(item => item.released_year))];
+        // Extract unique released years from the fetched data without using map
+        const yearsSet = new Set();
+        response.data.forEach(item => {
+          yearsSet.add(item.released_year);
+        });
+        const years = [...yearsSet];
         setReleasedYears(years);
       } catch (error) {
         console.error('Error fetching output data:', error);
       }
     };
-
+  
     fetchYears();
-  }, []);
+  }, []);  
 
   // Handle the year change and call the parent component to filter data
   const handleYearChange = (e) => {
