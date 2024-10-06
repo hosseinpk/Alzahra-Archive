@@ -36,28 +36,28 @@ class Archive(models.Model):
 
 
 class Project(models.Model):
-    prj_name = models.CharField(max_length=100)
+    prj_name = models.CharField(max_length=100,unique=True)
 
     def __str__(self):
         return self.prj_name
 
 
 class AssetType(models.Model):
-    type = models.CharField(max_length=100)
+    type = models.CharField(max_length=100,unique=True)
 
     def __str__(self):
         return self.type
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255,unique=True)
 
     def __str__(self):
         return self.name
 
 
 class FileType(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20,unique=True)
 
     def __str__(self):
         return self.name
