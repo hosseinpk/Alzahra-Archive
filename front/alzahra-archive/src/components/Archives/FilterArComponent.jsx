@@ -19,8 +19,8 @@ const FilterComponent = ({ onFilterChange }) => {
           },
         };
         const [projectRes, categoryRes] = await Promise.all([
-          axios.get('http://127.0.0.1:8000/archive/api/v1/project/', config),
-          axios.get('http://127.0.0.1:8000/archive/api/v1/category/', config),
+          axios.get('http://192.168.160.60:8000/archive/api/v1/project/', config),
+          axios.get('http://192.168.160.60:8000/archive/api/v1/category/', config),
         ]);
 
         setProjects(projectRes.data);

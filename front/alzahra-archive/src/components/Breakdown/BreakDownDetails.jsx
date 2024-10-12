@@ -19,7 +19,7 @@ const BreakDownDetails = () => {
           }
         };
 
-        const response = await axios.get(`http://127.0.0.1:8000/breakdown/api/v1/breakdown/${id}/`, config);
+        const response = await axios.get(`http://192.168.160.60:8000/breakdown/api/v1/breakdown/${id}/`, config);
         setItem(response.data);
         
       } catch (error) {

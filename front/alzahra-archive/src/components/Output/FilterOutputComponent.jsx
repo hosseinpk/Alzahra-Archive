@@ -16,7 +16,7 @@ const FilterOutputComponent = ({ onFilterChange }) => {
           },
         };
   
-        const response = await axios.get('http://127.0.0.1:8000/output/api/v1/output/', config);
+        const response = await axios.get('http://192.168.160.60:8000/output/api/v1/output/', config);
         // Extract unique released years from the fetched data without using map
         const yearsSet = new Set();
         response.data.forEach(item => {

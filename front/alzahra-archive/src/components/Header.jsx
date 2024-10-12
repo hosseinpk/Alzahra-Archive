@@ -12,7 +12,7 @@ const Header = () => {
     const accessToken = localStorage.getItem('accessToken'); // Get access token from local storage
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/accounts/api/v1/logout/', 
+      const response = await axios.post('http://192.168.160.60:8000/accounts/api/v1/logout/', 
         { refresh: refreshToken },  // Send refresh token in the body
         {
           headers: {

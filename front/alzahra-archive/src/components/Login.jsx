@@ -13,7 +13,7 @@ const Login = () => {
     e.preventDefault();
     try {
  
-      const response = await axios.post('http://127.0.0.1:8000/accounts/api/v1/login/', {
+      const response = await axios.post('http://192.168.160.60:8000/accounts/api/v1/login/', {
         email,
         password,
       });

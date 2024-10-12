@@ -20,7 +20,7 @@ const BreakDown = () => {
           },
         };
 
-        const response = await axios.get('http://127.0.0.1:8000/breakdown/api/v1/breakdown/', config);
+        const response = await axios.get('http://192.168.160.60:8000/breakdown/api/v1/breakdown/', config);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching the breakdown data:', error);

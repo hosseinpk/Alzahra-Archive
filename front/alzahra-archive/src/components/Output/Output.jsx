@@ -27,7 +27,7 @@ const Output = () => {
           params.append('released_year', filters.released_year);
         }
 
-        const response = await axios.get(`http://127.0.0.1:8000/output/api/v1/output/?${params.toString()}`, config);
+        const response = await axios.get(`http://192.168.160.60:8000/output/api/v1/output/?${params.toString()}`, config);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching the output data:', error);

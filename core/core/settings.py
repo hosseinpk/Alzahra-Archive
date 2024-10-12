@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-g!60(ta&_3mzqml_b&uy#=he&l_o@hv4t=hwj%scyt*+$k#ozx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -101,10 +101,21 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'alzahra_archive',          # Your PostgreSQL database name
+        'USER': 'admin',             # Your PostgreSQL user
+        'PASSWORD': 'Hp111271@',     # Your PostgreSQL user's password
+        'HOST': 'localhost',          # Set to an empty string for localhost
+        'PORT': '5432',               # Default PostgreSQL port
     }
 }
 

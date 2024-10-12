@@ -36,10 +36,10 @@ const AddFile = ({ onSave }) => {
           },
         };
         const [categoryRes, assetRes, projectRes, fileTypeRes] = await Promise.all([
-          axios.get('http://127.0.0.1:8000/archive/api/v1/category/', config),
-          axios.get('http://127.0.0.1:8000/archive/api/v1/asset/', config),
-          axios.get('http://127.0.0.1:8000/archive/api/v1/project/', config),
-          axios.get('http://127.0.0.1:8000/archive/api/v1/filetype/', config),
+          axios.get('http://192.168.160.60:8000/archive/api/v1/category/', config),
+          axios.get('http://192.168.160.60:8000/archive/api/v1/asset/', config),
+          axios.get('http://192.168.160.60:8000/archive/api/v1/project/', config),
+          axios.get('http://192.168.160.60:8000/archive/api/v1/filetype/', config),
         ]);
 
         setCategories(categoryRes.data);
@@ -86,7 +86,7 @@ const AddFile = ({ onSave }) => {
         formData.append(key, value);
       }
 
-      await axios.post('http://127.0.0.1:8000/archive/api/v1/archive/', formData, config);
+      await axios.post('http://192.168.160.60:8000/archive/api/v1/archive/', formData, config);
       setSnackbarMessage('File added successfully!'); // Success message
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
