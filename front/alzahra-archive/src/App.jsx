@@ -34,14 +34,14 @@ const App = () => {
       <Routes>
         <Route
           path="/login"
-          element={context.accessToken == null ? <Login /> : <Navigate to="/home" /> }
+          element={<ProtectedRoute element={<HomePage />} /> }
         />
         <Route
           path="/home"
           element={<ProtectedRoute element={<HomePage />} />}
         />
-        <Route path="/archive/:id" element={<ArchiveDetails />} />
-        <Route path='/breakdown/:id' element={<BreakDownDetails />}/>
+        <Route path="/archive/:id" element={<ProtectedRoute element={<ArchiveDetails />} />} />
+        <Route path='/breakdown/:id' element={<ProtectedRoute element={<BreakDownDetails />} />}/>
         <Route path='/output/:id' element={<OutputDetail />}/>
         
         <Route path="/archive" element={<ProtectedRoute element={<Archive />} />} />
@@ -49,7 +49,7 @@ const App = () => {
         <Route path="/output" element={<ProtectedRoute element={<OutputPage />} />} />
         <Route
           path="*"
-          element={context.accessToken == null  ? <Login />  : <Navigate to="/home" /> }
+          element={<ProtectedRoute element={<HomePage />} />}
         />
       </Routes>
    
