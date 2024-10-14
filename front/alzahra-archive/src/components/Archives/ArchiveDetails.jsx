@@ -10,11 +10,15 @@ const ArchiveDetails = () => {
   const [item, setItem] = useState(null);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false); // State to handle modal open/close
+  const [isStaff, setIsStaff] = useState(false); // State for checking if user is staff
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const accessToken = localStorage.getItem('accessToken');
+        const is_staff = localStorage.getItem("is_staff") === 'true'; // Convert string to boolean
+        setIsStaff(is_staff); // Set the isStaff state based on the localStorage value
+
         const config = {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -91,15 +95,17 @@ const ArchiveDetails = () => {
                 Textured: {item.textured ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />} {/* Show tick or cross */}
               </Typography>
               <Box sx={{ mt: 3, textAlign: 'right' }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  href={item.file}
-                  download
-                  sx={{ fontSize: '1rem', padding: '10px 20px' }} // Larger button
-                >
-                  Download File
-                </Button>
+                {isStaff && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href={item.file}
+                    download
+                    sx={{ fontSize: '1rem', padding: '10px 20px' }} // Larger button
+                  >
+                    Download File
+                  </Button>
+                )}
               </Box>
             </CardContent>
           </Grid>

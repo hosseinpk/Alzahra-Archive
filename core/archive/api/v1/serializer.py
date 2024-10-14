@@ -39,7 +39,8 @@ class ArchiveSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get("request")
         rep = super().to_representation(instance)
-
+        if not request.user.is_staff:
+            rep.pop("file",None)
         if request.parser_context.get("kwargs").get("pk"):
             rep.pop("absolute_url", None)
             rep.pop("snippet", None)
