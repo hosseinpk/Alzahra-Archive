@@ -22,7 +22,7 @@ const App = () => {
 
   const context = React.useContext(UserContext)
   const ProtectedRoute = ({ element }) => {
-    return context.accessToken == null ?<Navigate to="/login" />: element ;
+    return context.accessToken == null ?<Login />: element ;
   };
 
 
