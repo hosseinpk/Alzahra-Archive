@@ -3,42 +3,14 @@ import { AppBar, Toolbar, Button, Typography, Container, Box } from '@mui/materi
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import axios
 import logo from '../../assets/Logo.png'; 
+import { UserContext } from '../components/layout/context';
+import { API_BASE_URL } from '../config';
 
 const Header = () => {
   const navigate = useNavigate();
+  const context = React.useContext(UserContext);
+  const isLoggedIn = context.accessToken == null ? false: true ;  // Check if the user is logged in
 
-  const handleLogout = async () => {
-    const refreshToken = localStorage.getItem('refreshToken'); // Get refresh token from local storage
-    const accessToken = localStorage.getItem('accessToken'); // Get access token from local storage
-
-    try {
-      const response = await axios.post('http://192.168.160.60:8000/accounts/api/v1/logout/', 
-        { refresh: refreshToken },  // Send refresh token in the body
-        {
-          headers: {
-            'Content-Type': 'application/json', // Set the content type to JSON
-            'Authorization': `Bearer ${accessToken}`, // Include the access token in the Authorization header
-          },
-        }
-      );
-
-      if (response.status === 204) {
-        // If the logout is successful, clear local storage and redirect to login page
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('is_staff');
-        localStorage.removeItem('username');
-        navigate('/login');
-      } else {
-        console.error('Logout failed:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-
-  const isLoggedIn = !!localStorage.getItem('accessToken');  // Check if the user is logged in
-  const username = localStorage.getItem('username');  // Get the username from localStorage
 
   return (
     <AppBar position="static">
@@ -58,13 +30,14 @@ const Header = () => {
           {/* Show Username if Logged In */}
           {isLoggedIn && (
             <Button color="inherit">
-              {username}
+              {context.username}
             </Button>
           )}
           {/* Show Login/Logout Button */}
-          <Button color="inherit" onClick={isLoggedIn ? handleLogout : () => navigate('/login')}>
+          <Button color="inherit" onClick={isLoggedIn ? context.handleLogout : () => navigate('/login')}>
             {isLoggedIn ? 'Logout' : 'Login'}
           </Button>
+          
         </Toolbar>
       </Container>
     </AppBar>

@@ -2,24 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, Typography, CardMedia, Button, Container, Box, Grid, Dialog, DialogContent } from '@mui/material';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
+import { UserContext } from "../layout/context";
 
 const BreakDownDetails = () => {
   const { id } = useParams(); // Get the ID from the URL
   const [item, setItem] = useState(null);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false); // State to handle modal open/close
+  const context = React.useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken');
+        
         const config = {
           headers: {
-            Authorization: `Bearer ${accessToken}`
+            Authorization: `Bearer ${context.accessToken}`
           }
         };
 
-        const response = await axios.get(`http://192.168.160.60:8000/breakdown/api/v1/breakdown/${id}/`, config);
+        const response = await axios.get(`http://${API_BASE_URL}/breakdown/api/v1/breakdown/${id}/`, config);
         setItem(response.data);
         
       } catch (error) {

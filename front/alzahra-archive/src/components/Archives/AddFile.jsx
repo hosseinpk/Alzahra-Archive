@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Checkbox, FormControlLabel, MenuItem, Box, Snackbar, Alert, Typography } from '@mui/material';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
+import { UserContext } from "../layout/context";
 
 const AddFile = ({ onSave }) => {
   const [data, setData] = useState({
@@ -24,22 +26,23 @@ const AddFile = ({ onSave }) => {
   const [assets, setAssets] = useState([]);
   const [projects, setProjects] = useState([]);
   const [fileTypes, setFileTypes] = useState([]);
+  const context = React.useContext(UserContext);
 
   // Fetch data for dropdowns
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken');
+        
         const config = {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${context.accessToken}`,
           },
         };
         const [categoryRes, assetRes, projectRes, fileTypeRes] = await Promise.all([
-          axios.get('http://192.168.160.60:8000/archive/api/v1/category/', config),
-          axios.get('http://192.168.160.60:8000/archive/api/v1/asset/', config),
-          axios.get('http://192.168.160.60:8000/archive/api/v1/project/', config),
-          axios.get('http://192.168.160.60:8000/archive/api/v1/filetype/', config),
+          axios.get(`http://${API_BASE_URL}/archive/api/v1/category/`, config),
+          axios.get(`http://${API_BASE_URL}/archive/api/v1/asset/`, config),
+          axios.get(`http://${API_BASE_URL}/archive/api/v1/project/`, config),
+          axios.get(`http://${API_BASE_URL}/archive/api/v1/filetype/`, config),
         ]);
 
         setCategories(categoryRes.data);
@@ -72,10 +75,10 @@ const AddFile = ({ onSave }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const accessToken = localStorage.getItem('accessToken');
+      
       const config = {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${context.accessToken}`,
         },
       };
       const formData = new FormData();
@@ -86,7 +89,7 @@ const AddFile = ({ onSave }) => {
         formData.append(key, value);
       }
 
-      await axios.post('http://192.168.160.60:8000/archive/api/v1/archive/', formData, config);
+      await axios.post(`http://${API_BASE_URL}/archive/api/v1/archive/`, formData, config);
       setSnackbarMessage('File added successfully!'); // Success message
       setSnackbarSeverity('success');
       setSnackbarOpen(true);

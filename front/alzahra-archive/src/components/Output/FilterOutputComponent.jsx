@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Box, MenuItem } from '@mui/material';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
+import { UserContext } from "../layout/context";
 
 const FilterOutputComponent = ({ onFilterChange }) => {
   const [releasedYears, setReleasedYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
+  const context = React.useContext(UserContext);
 
   useEffect(() => {
     const fetchYears = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken');
+        
         const config = {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${context.accessToken}`,
           },
         };
   
-        const response = await axios.get('http://192.168.160.60:8000/output/api/v1/output/', config);
+        const response = await axios.get(`http://${API_BASE_URL}/output/api/v1/output/`, config);
         // Extract unique released years from the fetched data without using map
         const yearsSet = new Set();
         response.data.forEach(item => {

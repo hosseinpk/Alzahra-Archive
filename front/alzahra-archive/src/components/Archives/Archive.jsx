@@ -21,6 +21,9 @@ import {
 import axios from 'axios';
 import FilterComponent from './FilterArComponent';
 import AddFile from './AddFile';
+import { UserContext } from "../layout/context";
+import { API_BASE_URL } from '../../config';
+
 
 const Archive = () => {
   const [data, setData] = useState([]);
@@ -32,14 +35,15 @@ const Archive = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const navigate = useNavigate();
+  const context = React.useContext(UserContext);
 
   // Fetch data from API based on filters or search query
   const fetchData = async () => {
     try {
-      const accessToken = localStorage.getItem('accessToken');
+      
       const config = {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${context.accessToken}`,
         },
         params: {
           category: filters.category || undefined,
@@ -48,7 +52,7 @@ const Archive = () => {
         },
       };
 
-      const response = await axios.get('http://192.168.160.60:8000/archive/api/v1/archive/', config);
+      const response = await axios.get(`http://${API_BASE_URL}/archive/api/v1/archive/`, config);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching the archive data:', error);

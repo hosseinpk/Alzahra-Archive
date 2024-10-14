@@ -4,14 +4,20 @@ import { useNavigate } from 'react-router-dom';
 import archiveImage from '../../assets/archive.jpeg'; 
 import breakdownImage from '../../assets/breakdown.jpeg'; 
 import outputImage from '../../assets/output.jpeg'; 
+import { UserContext } from './layout/context';
+
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const isStaff = localStorage.getItem('is_staff') === 'true'; // Retrieve is_staff status from local storage
+ 
 
   const handleCardClick = (path) => {
     navigate(path); 
   };
+
+
+const {isStaff} =React.useContext(UserContext)
+
 
   return (
     <Box sx={{ padding: 25 }}>

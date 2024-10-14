@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Grid, Container, CardActionArea, CardMedia, Box, TextField } from '@mui/material';
 import axios from 'axios';
 import FilterOutputComponent from './FilterOutputComponent';
+import { API_BASE_URL } from '../../config';
+import { UserContext } from "../layout/context";
 
 const Output = () => {
   const [data, setData] = useState([]);
@@ -10,14 +12,15 @@ const Output = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({ released_year: '' });
   const navigate = useNavigate();
+  const context = React.useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken');
+        
         const config = {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${context.accessToken}`,
           },
         };
 
@@ -27,7 +30,7 @@ const Output = () => {
           params.append('released_year', filters.released_year);
         }
 
-        const response = await axios.get(`http://192.168.160.60:8000/output/api/v1/output/?${params.toString()}`, config);
+        const response = await axios.get(`http://${API_BASE_URL}/output/api/v1/output/?${params.toString()}`, config);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching the output data:', error);

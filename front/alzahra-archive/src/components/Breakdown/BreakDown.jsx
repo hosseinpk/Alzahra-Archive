@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Grid, Container, CardActionArea, CardMedia, Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
+import { UserContext } from "../layout/context";
+
 
 const BreakDown = () => {
   const [data, setData] = useState([]);
@@ -9,18 +12,22 @@ const BreakDown = () => {
   const [open, setOpen] = useState(false); // Modal open state
   const [searchTerm, setSearchTerm] = useState(''); // Search term state
   const navigate = useNavigate();
+  const context = React.useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken');
+    
+      
+        const bearerToken=`Bearer ${context.accessToken}`
+
         const config = {
           headers: {
-            'Authorization': `Bearer ${accessToken}`,
+            'Authorization': bearerToken,
           },
         };
 
-        const response = await axios.get('http://192.168.160.60:8000/breakdown/api/v1/breakdown/', config);
+        const response = await axios.get(`http://${API_BASE_URL}/breakdown/api/v1/breakdown/`, config);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching the breakdown data:', error);

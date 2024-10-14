@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, MenuItem, Box } from '@mui/material';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
+import { UserContext } from "../layout/context";
 
 const FilterComponent = ({ onFilterChange }) => {
   const [projects, setProjects] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedProject, setSelectedProject] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const context = React.useContext(UserContext);
 
   // Fetch data for projects and categories
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken');
+        
         const config = {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${context.accessToken}`,
           },
         };
         const [projectRes, categoryRes] = await Promise.all([
-          axios.get('http://192.168.160.60:8000/archive/api/v1/project/', config),
-          axios.get('http://192.168.160.60:8000/archive/api/v1/category/', config),
+          axios.get(`http://${API_BASE_URL}/archive/api/v1/project/`, config),
+          axios.get(`http://${API_BASE_URL}/archive/api/v1/category/`, config),
         ]);
 
         setProjects(projectRes.data);

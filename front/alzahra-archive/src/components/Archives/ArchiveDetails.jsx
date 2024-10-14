@@ -4,28 +4,28 @@ import { Card, CardContent, Typography, CardMedia, Button, Container, Box, Grid,
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'; 
 import CancelIcon from '@mui/icons-material/Cancel'; // Import Cancel for cross
 import axios from 'axios';
+import { UserContext } from "../layout/context";
+import { API_BASE_URL } from '../../config';
+
 
 const ArchiveDetails = () => {
   const { id } = useParams(); // Get the ID from the URL
   const [item, setItem] = useState(null);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false); // State to handle modal open/close
-  const [isStaff, setIsStaff] = useState(false); // State for checking if user is staff
+  const context = React.useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken');
-        const is_staff = localStorage.getItem("is_staff") === 'true'; // Convert string to boolean
-        setIsStaff(is_staff); // Set the isStaff state based on the localStorage value
-
+       
         const config = {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${context.accessToken}`,
           },
         };
 
-        const response = await axios.get(`http://192.168.160.60:8000/archive/api/v1/archive/${id}/`, config);
+        const response = await axios.get(`http://${API_BASE_URL}/archive/api/v1/archive/${id}/`, config);
         setItem(response.data);
       } catch (error) {
         console.error('Error fetching archive details:', error);
@@ -95,7 +95,7 @@ const ArchiveDetails = () => {
                 Textured: {item.textured ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />} {/* Show tick or cross */}
               </Typography>
               <Box sx={{ mt: 3, textAlign: 'right' }}>
-                {isStaff && (
+                {context.isStaff && (
                   <Button
                     variant="contained"
                     color="primary"

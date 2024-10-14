@@ -11,24 +11,30 @@ import BreakDownDetails from './components/Breakdown/BreakDownDetails';
 import OutputDetail from './components/Output/OutputDetail';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { UserContext } from './components/layout/context';
 
-const isAuthenticated = () => {
-  const accessToken = localStorage.getItem('accessToken');
-  return !!accessToken; 
-};
 
-const ProtectedRoute = ({ element }) => {
-  return isAuthenticated() ? element : <Navigate to="/login" />;
-};
+
+
 
 const App = () => {
+
+
+  const context = React.useContext(UserContext)
+  const ProtectedRoute = ({ element }) => {
+    return context.accessToken == null ?<Navigate to="/login" />: element ;
+  };
+
+
   return (
+ 
     <Router>
+      
       <Header />
       <Routes>
         <Route
           path="/login"
-          element={isAuthenticated() ? <Navigate to="/home" /> : <Login />}
+          element={context.accessToken == null ? <Login /> : <Navigate to="/home" /> }
         />
         <Route
           path="/home"
@@ -43,10 +49,12 @@ const App = () => {
         <Route path="/output" element={<ProtectedRoute element={<OutputPage />} />} />
         <Route
           path="*"
-          element={<Navigate to={isAuthenticated() ? "/home" : "/login"} />}
+          element={context.accessToken == null  ? <Login />  : <Navigate to="/home" /> }
         />
       </Routes>
+   
     </Router>
+
   );
 };
 

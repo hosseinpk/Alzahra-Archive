@@ -1,36 +1,18 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import { TextField, Button, Container, Typography } from '@mui/material';
-import axios from 'axios';
+
+
+import { UserContext } from '../components/layout/context';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Ensure useNavigate is imported correctly
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
- 
-      const response = await axios.post('http://192.168.160.60:8000/accounts/api/v1/login/', {
-        email,
-        password,
-      });
-      
-      const { access, refresh,is_staff,username } = response.data;
-      localStorage.setItem('accessToken', access);
-      localStorage.setItem('refreshToken', refresh);
-      localStorage.setItem('is_staff', is_staff);
-      localStorage.setItem('username',username)
 
-      navigate('/home');
-    } catch (error) {
-      // Handling login failure
-      console.error('Login failed:', error);
-      setError('Login failed. Please check your credentials.');
-    }
-  };
+  const context = React.useContext(UserContext);
 
   return (
     <Container maxWidth="xs" sx={{
@@ -40,7 +22,16 @@ const Login = () => {
       <Typography variant="h4" gutterBottom>
         Login
       </Typography>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={async (e) => {
+    e.preventDefault();  // Prevent form from submitting and refreshing the page
+    try {
+        await context.handleLogin(email, password);
+        // You can add additional actions after successful login
+    } catch (error) {
+        console.error("Login failed", error);
+        // Handle the error, e.g., show a message to the user
+    }
+}}>
         <TextField
           label="Email"
           variant="outlined"

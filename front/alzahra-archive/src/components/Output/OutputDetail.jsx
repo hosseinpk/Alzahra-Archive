@@ -2,23 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, Typography, Container, Box, Grid } from '@mui/material';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
+import { UserContext } from "../layout/context";
 
 const OutputDetail = () => {
   const { id } = useParams(); // Get the ID from the URL
   const [item, setItem] = useState(null);
   const [error, setError] = useState(null);
+  const context = React.useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken');
+        
         const config = {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${context.accessToken}`,
           },
         };
 
-        const response = await axios.get(`http://192.168.160.60:8000/output/api/v1/output/${id}/`, config);
+        const response = await axios.get(`http://${API_BASE_URL}/output/api/v1/output/${id}/`, config);
         setItem(response.data);
       } catch (error) {
         console.error('Error fetching output details:', error);
