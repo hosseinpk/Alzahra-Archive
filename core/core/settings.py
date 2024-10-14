@@ -11,11 +11,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -111,9 +112,9 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'alzahra_archive',          # Your PostgreSQL database name
-        'USER': 'admin',             # Your PostgreSQL user
-        'PASSWORD': 'Hp111271@',     # Your PostgreSQL user's password
+        'NAME': env("NAME"),          # Your PostgreSQL database name
+        'USER': env("DB_USER"),             # Your PostgreSQL user
+        'PASSWORD': env("PASSWORD"),     # Your PostgreSQL user's password
         'HOST': 'localhost',          # Set to an empty string for localhost
         'PORT': '5432',               # Default PostgreSQL port
     }
