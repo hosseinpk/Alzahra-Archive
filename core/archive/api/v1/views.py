@@ -17,6 +17,8 @@ from .filters import CustomFilter
 from .pagination import DefaultPagination
 from django.db.models import Q
 from rest_framework.filters import SearchFilter
+from archive.tasks import save_file_in_background
+
 
 
 class ArchiveView(viewsets.ModelViewSet):
@@ -27,6 +29,7 @@ class ArchiveView(viewsets.ModelViewSet):
     filterset_class = CustomFilter
     pagination_class = DefaultPagination
     search_fields = ['description','name']
+    
 
 
     def get_permissions(self):
@@ -100,15 +103,32 @@ class ArchiveView(viewsets.ModelViewSet):
             instance=queryset, many=True, context={"request": request}
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def create(self, request):
-
-        serializer = self.serializer_class(
-            data=request.data, context={"request": request}
-        )
+        
+    def create(self, request, *args, **kwargs):
+        serializer = ArchiveSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        archive = serializer.save(file=None)  
+        
+        file = request.FILES['file']  
+        file_path = f'/tmp/{file.name}'
+        with open(file_path, 'wb+') as temp_file:
+            for chunk in file.chunks():
+                temp_file.write(chunk)
+        save_file_in_background.delay(archive.id, file_path)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    # def create(self,request,*args,**kwargs):
+    
+    #     serializer = ArchiveSerializer( data = request.data, context = {"request":request} )
+    #     serializer.is_valid(raise_exception=True)
+    #     filename=serializer.validated_data.pop('file')
+    #     serializer.save()
+    #     id = serializer.validated_data.get("id")
+    #     save_file_in_background.delay(id,filename)
+        
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
     def destroy(self, request, *args, **kwargs):
 
