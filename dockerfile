@@ -1,11 +1,6 @@
-FROM python:3.8-slim-buster
+FROM python:3.12
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONBUFFERED=1
 WORKDIR /app
 COPY requirements.txt /app
-RUN pip install -r requierments.txt
-
-COPY ./core /app
-
-
+RUN pip install --no-cache-dir -r requirements.txt
+COPY ./core /app  
