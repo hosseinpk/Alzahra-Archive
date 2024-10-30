@@ -27,7 +27,7 @@ const BreakDown = () => {
           },
         };
 
-        const response = await axios.get(`http://${API_BASE_URL}/breakdown/api/v1/breakdown/`, config);
+        const response = await axios.get(`${API_BASE_URL}/breakdown/api/v1/breakdown/`, config);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching the breakdown data:', error);

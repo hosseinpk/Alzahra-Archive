@@ -52,7 +52,7 @@ const Archive = () => {
         },
       };
 
-      const response = await axios.get(`http://${API_BASE_URL}/archive/api/v1/archive/`, config);
+      const response = await axios.get(`${API_BASE_URL}/archive/api/v1/archive/`, config);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching the archive data:', error);

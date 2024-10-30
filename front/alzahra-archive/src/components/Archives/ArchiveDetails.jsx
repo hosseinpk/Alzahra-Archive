@@ -25,7 +25,7 @@ const ArchiveDetails = () => {
           },
         };
 
-        const response = await axios.get(`http://${API_BASE_URL}/archive/api/v1/archive/${id}/`, config);
+        const response = await axios.get(`${API_BASE_URL}/archive/api/v1/archive/${id}/`, config);
         setItem(response.data);
       } catch (error) {
         console.error('Error fetching archive details:', error);
