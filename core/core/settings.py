@@ -179,11 +179,20 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ]
+}
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'core.urls.api_info',  # Update to match your path
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': "login with jwt token'",
+        }
+    },
 }
 
 from datetime import timedelta
