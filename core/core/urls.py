@@ -51,7 +51,7 @@ urlpatterns = [
         name="schema-json",
     ),
     path(
-        "swagger/",
+        "",
         schema_view.with_ui("swagger", cache_timeout=None),
         name="schema-swagger-ui",
     ),

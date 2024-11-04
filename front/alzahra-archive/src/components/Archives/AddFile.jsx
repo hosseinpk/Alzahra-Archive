@@ -39,10 +39,10 @@ const AddFile = ({ onSave }) => {
           },
         };
         const [categoryRes, assetRes, projectRes, fileTypeRes] = await Promise.all([
-          axios.get(`http://${API_BASE_URL}/archive/api/v1/category/`, config),
-          axios.get(`http://${API_BASE_URL}/archive/api/v1/asset/`, config),
-          axios.get(`http://${API_BASE_URL}/archive/api/v1/project/`, config),
-          axios.get(`http://${API_BASE_URL}/archive/api/v1/filetype/`, config),
+          axios.get(`${API_BASE_URL}/archive/api/v1/category/`, config),
+          axios.get(`${API_BASE_URL}/archive/api/v1/asset/`, config),
+          axios.get(`${API_BASE_URL}/archive/api/v1/project/`, config),
+          axios.get(`${API_BASE_URL}/archive/api/v1/filetype/`, config),
         ]);
 
         setCategories(categoryRes.data);
@@ -89,7 +89,7 @@ const AddFile = ({ onSave }) => {
         formData.append(key, value);
       }
 
-      await axios.post(`http://${API_BASE_URL}/archive/api/v1/archive/`, formData, config);
+      await axios.post(`${API_BASE_URL}/archive/api/v1/archive/`, formData, config);
       setSnackbarMessage('File added successfully!'); // Success message
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
