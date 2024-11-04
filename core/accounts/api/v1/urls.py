@@ -18,9 +18,6 @@ urlpatterns = [
     # login
     path("login/", views.LoginApiView.as_view(), name="login"),
     path("logout/", views.LogoutApiView.as_view(), name="logout"),
-    # login jwt
-    # path('jwt/create',TokenObtainPairView.as_view(),name='jwt-create'),
-    # path('jwt/refresh'),
-    # path('jwt/regtrsh',TokenRefreshView.as_view(),name='token-refresh'),
-    # path("jwt/verify", TokenVerifyView.as_view(), name="token-verify"),
+    path('refresh',TokenRefreshView.as_view(),name='token-refresh'),
+    path("verify", TokenVerifyView.as_view(), name="token-verify"),
 ]
