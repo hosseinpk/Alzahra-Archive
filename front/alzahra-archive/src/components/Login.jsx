@@ -29,6 +29,7 @@ const Login = () => {
         // You can add additional actions after successful login
     } catch (error) {
         console.error("Login failed", error);
+        setError(true)
         // Handle the error, e.g., show a message to the user
     }
 }}>
