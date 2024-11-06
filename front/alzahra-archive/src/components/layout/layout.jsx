@@ -1,20 +1,18 @@
 import React from "react";
 import { useLocalStorage } from "./useLocalStorage";
 import { UserContext } from "../layout/context";
-import {API_BASE_URL} from "../../config" 
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { API_BASE_URL } from "../../config";
+import axios from "axios";
 
 export const Layout = ({ children }) => {
-
   const [accessToken, setAccessToken] = useLocalStorage("accessToken", null);
   const [refreshToken, setRefreshToken] = useLocalStorage("refreshToken", null);
   const [isStaff, setIsStaff] = useLocalStorage("is_staff", null);
   const [username, setUsername] = useLocalStorage("username", null);
-  //const navigate = useNavigate();
+  
 
-  const handleLogin = async (email,password) => {
-    //e.preventDefault();
+  const handleLogin = async (email, password) => {
+    
     try {
       const response = await axios.post(
         `http://${API_BASE_URL}/accounts/api/v1/login/`,
@@ -25,15 +23,19 @@ export const Layout = ({ children }) => {
       );
 
       const { access, refresh, is_staff, username } = response.data;
-      setAccessToken( access);
-      setRefreshToken( refresh);
-      setIsStaff( is_staff);
-      setUsername( username);
-      //navigate("/home");
+      setAccessToken(access);
+      setRefreshToken(refresh);
+      setIsStaff(is_staff);
+      setUsername(username);
+      
     } catch (error) {
-      // Handling login failure
       console.error("Login failed:", error);
-      //etError("Login failed. Please check your credentials.");
+      const errorMessage =
+        error.response && error.response.status === 400
+          ? "Invalid username or password. Please try again."
+          : "Login failed. Please check your network connection and try again.";
+
+      throw new Error(errorMessage);
     }
   };
 
@@ -41,23 +43,23 @@ export const Layout = ({ children }) => {
     try {
       const response = await axios.post(
         `http://${API_BASE_URL}/accounts/api/v1/logout/`,
-        { refresh: refreshToken }, // Send refresh token in the body
+        { refresh: refreshToken }, 
         {
           headers: {
-            "Content-Type": "application/json", // Set the content type to JSON
-            Authorization: `Bearer ${accessToken}`, // Include the access token in the Authorization header
+            "Content-Type": "application/json", 
+            Authorization: `Bearer ${accessToken}`, 
           },
         }
       );
 
       if (response.status === 204) {
-        // If the logout is successful, clear local storage and redirect to login page
+        
         setAccessToken(null);
         setRefreshToken(null);
         setUsername(null);
         setIsStaff(null);
         localStorage.clear();
-        //navigate("/login");
+        
       } else {
         console.error("Logout failed:", response.statusText);
       }
@@ -82,6 +84,3 @@ export const Layout = ({ children }) => {
     <UserContext.Provider value={context}>{children}</UserContext.Provider>
   );
 };
-
-
-
