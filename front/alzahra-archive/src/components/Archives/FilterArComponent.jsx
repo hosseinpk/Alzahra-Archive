@@ -22,8 +22,8 @@ const FilterComponent = ({ onFilterChange }) => {
           },
         };
         const [projectRes, categoryRes] = await Promise.all([
-          axios.get(`http://${API_BASE_URL}/archive/api/v1/project/`, config),
-          axios.get(`http://${API_BASE_URL}/archive/api/v1/category/`, config),
+          axios.get(`${API_BASE_URL}/archive/api/v1/project/`, config),
+          axios.get(`${API_BASE_URL}/archive/api/v1/category/`, config),
         ]);
 
         setProjects(projectRes.data);

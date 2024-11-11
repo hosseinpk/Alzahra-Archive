@@ -6,9 +6,15 @@ markdown
 django-filter
 django==4.2
 drf-yasg[validation]
-black
-flake8
 setuptools
 django-cors-headers
+<<<<<<< HEAD
 psycopg2
 django-environ
+=======
+psycopg2-binary
+django-environ
+celery
+redis
+gunicorn
+>>>>>>> 5dccb62668fbd543209d7ba5954753387323079d

@@ -39,11 +39,11 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("archive/", include("archive.urls")),
-    path("accounts/", include("accounts.urls")),
-    path("output/", include("final_output.urls")),
-    path("breakdown/",include("breakdown.urls")),
+    path("backend/admin/", admin.site.urls),
+    path("backend/archive/", include("archive.urls")),
+    path("backend/accounts/", include("accounts.urls")),
+    path("backend/output/", include("final_output.urls")),
+    path("backend/breakdown/",include("breakdown.urls")),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path(
         "swagger/output.json",

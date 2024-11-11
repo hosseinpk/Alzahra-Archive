@@ -15,7 +15,7 @@ export const Layout = ({ children }) => {
     
     try {
       const response = await axios.post(
-        `http://${API_BASE_URL}/accounts/api/v1/login/`,
+        `${API_BASE_URL}/accounts/api/v1/login/`,
         {
           email,
           password,
@@ -42,8 +42,13 @@ export const Layout = ({ children }) => {
   const handleLogout = async () => {
     try {
       const response = await axios.post(
+<<<<<<< HEAD
         `http://${API_BASE_URL}/accounts/api/v1/logout/`,
         { refresh: refreshToken }, 
+=======
+        `${API_BASE_URL}/accounts/api/v1/logout/`,
+        { refresh: refreshToken }, // Send refresh token in the body
+>>>>>>> 5dccb62668fbd543209d7ba5954753387323079d
         {
           headers: {
             "Content-Type": "application/json", 

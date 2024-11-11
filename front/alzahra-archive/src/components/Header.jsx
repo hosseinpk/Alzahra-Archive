@@ -1,10 +1,8 @@
 import React from 'react';
 import { AppBar, Toolbar, Button, Typography, Container, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios
 import logo from '../../assets/Logo.png'; 
 import { UserContext } from '../components/layout/context';
-import { API_BASE_URL } from '../config';
 
 const Header = () => {
   const navigate = useNavigate();

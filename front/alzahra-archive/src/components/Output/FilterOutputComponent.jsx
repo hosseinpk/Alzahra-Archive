@@ -19,7 +19,7 @@ const FilterOutputComponent = ({ onFilterChange }) => {
           },
         };
   
-        const response = await axios.get(`http://${API_BASE_URL}/output/api/v1/output/`, config);
+        const response = await axios.get(`${API_BASE_URL}/output/api/v1/output/`, config);
         // Extract unique released years from the fetched data without using map
         const yearsSet = new Set();
         response.data.forEach(item => {

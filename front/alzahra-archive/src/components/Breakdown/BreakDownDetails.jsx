@@ -22,7 +22,7 @@ const BreakDownDetails = () => {
           }
         };
 
-        const response = await axios.get(`http://${API_BASE_URL}/breakdown/api/v1/breakdown/${id}/`, config);
+        const response = await axios.get(`${API_BASE_URL}/breakdown/api/v1/breakdown/${id}/`, config);
         setItem(response.data);
         
       } catch (error) {

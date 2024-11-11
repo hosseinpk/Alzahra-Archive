@@ -21,7 +21,7 @@ const OutputDetail = () => {
           },
         };
 
-        const response = await axios.get(`http://${API_BASE_URL}/output/api/v1/output/${id}/`, config);
+        const response = await axios.get(`${API_BASE_URL}/output/api/v1/output/${id}/`, config);
         setItem(response.data);
       } catch (error) {
         console.error('Error fetching output details:', error);

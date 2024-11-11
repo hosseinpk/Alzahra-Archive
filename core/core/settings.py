@@ -24,7 +24,7 @@ environ.Env.read_env(BASE_DIR / '.env')
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG",False)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -112,11 +112,11 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env("NAME"),          # Your PostgreSQL database name
-        'USER': env("DB_USER"),             # Your PostgreSQL user
-        'PASSWORD': env("PASSWORD"),     # Your PostgreSQL user's password
-        'HOST': 'localhost',          # Set to an empty string for localhost
-        'PORT': '5432',               # Default PostgreSQL port
+        'NAME': env("POSTGRES_DB"),          
+        'USER': env("POSTGRES_USER"),             
+        'PASSWORD': env("POSTGRES_PASSWORD"),     
+        'HOST': 'db',          
+        'PORT': '5432',               
     }
 }
 
@@ -179,11 +179,20 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.BasicAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ]
+}
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'core.urls.api_info',  # Update to match your path
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': "login with jwt token'",
+        }
+    },
 }
 
 from datetime import timedelta
@@ -221,3 +230,11 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+
+# Celery Configuration Options
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

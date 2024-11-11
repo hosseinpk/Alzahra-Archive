@@ -30,7 +30,7 @@ const Output = () => {
           params.append('released_year', filters.released_year);
         }
 
-        const response = await axios.get(`http://${API_BASE_URL}/output/api/v1/output/?${params.toString()}`, config);
+        const response = await axios.get(`${API_BASE_URL}/output/api/v1/output/?${params.toString()}`, config);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching the output data:', error);
