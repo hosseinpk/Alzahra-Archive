@@ -47,7 +47,7 @@ const check_access = async (context) => {
       },
     };
     const response = await axios.post(
-      `http://${API_BASE_URL}/accounts/api/v1/verify`,
+      `http://${API_BASE_URL}/accounts/api/v1/verify/`,
       data
     );
 
@@ -65,7 +65,7 @@ const check_access = async (context) => {
         },
       };
       const response = await axios.post(
-        `http://${API_BASE_URL}/accounts/api/v1/refresh`,
+        `http://${API_BASE_URL}/accounts/api/v1/refresh/`,
         
         refresh_data.data
       );

@@ -18,6 +18,6 @@ urlpatterns = [
     # login
     path("login/", views.LoginApiView.as_view(), name="login"),
     path("logout/", views.LogoutApiView.as_view(), name="logout"),
-    path('refresh',TokenRefreshView.as_view(),name='token-refresh'),
-    path("verify", TokenVerifyView.as_view(), name="token-verify"),
+    path("refresh/",TokenRefreshView.as_view(),name='token-refresh'),
+    path("verify/", TokenVerifyView.as_view(), name="token-verify"),
 ]
